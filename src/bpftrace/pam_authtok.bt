@@ -2,11 +2,7 @@
 struct pam_handle_t
 {
   char *authtok;
-  unsigned buffer1;
-  void *buffer2;
-  char *buffer3;
-  char *buffer4;
-  char *buffer5;
+  void *filler[5];
   char *user;
 };
 
